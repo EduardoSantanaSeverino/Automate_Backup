@@ -1,0 +1,14 @@
+---
+- hosts: bk_main_server
+  
+  tasks:
+
+  - name: Deploy Server Page
+    community.docker.docker_container:
+      name: serverpage
+      image: "nginx:alpine"
+      ports:
+        - "8080:80"
+      volumes:
+        - "{{hostfiles}}:/usr/share/nginx/html"
+      restart_policy: always

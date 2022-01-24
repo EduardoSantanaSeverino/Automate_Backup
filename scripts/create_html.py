@@ -6,13 +6,21 @@
 import csv
 import sys
 from datetime import datetime
+import os
 
 def Get_Html(server,csv_file,html_file):
     # Open the CSV file for reading
     reader = csv.reader(open(csv_file))
 
+    directoryArray=html_file.split("/")
+    directoryArrayLastElement=directoryArray[len(directoryArray)-1]
+    directory=html_file.replace(directoryArrayLastElement, "")
+
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
     # Create the HTML file
-    f_html = open(html_file,"w");
+    f_html = open(html_file,"w+")
 
     section_1="""
     <html>
@@ -43,8 +51,10 @@ def Get_Html(server,csv_file,html_file):
         <table  style='font-style: bold; color:black; font-family:serif; font-size: 20px;'>
 
             <tr>
-                <td width="20%"> <a href="Infra.html">Infra</a></td>
-                <td width="20%"> <a href="DB.html">DB</a></td>
+                <td width="20%"> <a href="index.html">Infra</a></td>
+                <td width="20%"> <a href="DB.html">DB</a>
+            </td>
+            
     </div>
     """
     f_html.write(section_1)

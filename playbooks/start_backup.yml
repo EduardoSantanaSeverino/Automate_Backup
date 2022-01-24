@@ -6,16 +6,15 @@
 #{{csv}} -> CSV file location [called from user.yml]
 #{{html}} -> Html file location [called from user.yml]
 #{{server_ip}} -> Server IP address of source VM to be backed up (Remote Hosts)
-#{{place}} -> Destination child folder to copy files in the backup folder [Parent folder is set to /home/sonic/wordpress]
+#{{place}} -> Destination child folder to copy files in the backup folder [Parent folder is set to /root/backup-here/]
 
-     - name: This playbook is dedicated to taking backup related to Sonic Project and its called from respective user.yml
+     - name: This playbook is dedicated to taking backup to remote server
        block:
         - name: Copying files from source server to destination
-          synchronize:
+          ansible.posix.synchronize:
              src: "{{item}}"
-             dest: "/home/sonic/wordpress/{{place}}"
+             dest: "/root/backup-here/{{place}}"
              mode: pull
-          delegate_to: "{{groups['bk_main_server'][0]}}" 
 
         - name: Executing Python script to store the status in CSV file
           shell:
