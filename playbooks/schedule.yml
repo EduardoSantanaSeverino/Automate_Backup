@@ -3,12 +3,41 @@
   hosts: bk_main_server
   tasks:
 
-    - name: Creating a new folder
+    - name: Set timezone to America/Toronto
+      community.general.timezone:
+        name: America/Toronto
+
+    - name: Add SSH Config in file
+      become: true
+      blockinfile:
+        path: /root/.ssh/config
+        create: true
+        block: |
+          Host pentahost24
+            HostName 93.190.93.21
+            User root
+            Port 33091
+            IdentityFile /root/.ssh/keys/pentahost24
+    
+    - name: Creating a new folder for keys
+      become: true
+      file:
+        path: "/root/.ssh/keys"
+        state: directory
+
+    - name: Copy SSH Private key
+      become: true 
+      copy:
+        src: ../inventory/pentahost24.key
+        dest: /root/.ssh/keys/pentahost24
+        mode: 0400
+
+    - name: Creating a new folder for log_folder
       become: true
       file:
         path: "{{cronjob_log_folder}}"
         state: directory
- 
+
     - name: Creating a file with script to execute
       become: true
       copy:
@@ -16,14 +45,30 @@
         mode: 0755
         content: |
           CURRENT_TIME=$(date +"%Y%m%d_%H%M")
-          echo "Executed successfully at: $CURRENT_TIME" >> {{cronjob_log_folder}}/log.log
+          echo "Execution Started at: $CURRENT_TIME" >> {{cronjob_log_folder}}/log.log
+          rsync -av -e ssh pentahost24:/newbackup {{cronjob_log_folder}}/pentahost24-back
+          CURRENT_TIME=$(date +"%Y%m%d_%H%M")
+          echo "Execution Completed at: $CURRENT_TIME" >> {{cronjob_log_folder}}/log.log
+          python create_csv.py "/newbackup" "Success" "pentahost24" "log.csv"
+          python create_html.py "pentahost24" "log.csv" "html/index.html"
+          exit 0
 
     - name: Creates an schedule #  crontab -l
       cron:
         name: "BookScriptExecute"
-        day: "*/1"
-        hour: "1"
-        minute: "0"
+        hour: "*/6"
         job: "{{cronjob_log_folder}}/exec.sh"
 
-          
+    - name: Copy File Create CSV
+      become: true 
+      copy:
+        src: ../scripts/create_csv.py
+        dest: "{{cronjob_log_folder}}/create_csv.py"
+        mode: 0400
+
+    - name: Copy File Create HTML
+      become: true 
+      copy:
+        src: ../scripts/create_html.py
+        dest: "{{cronjob_log_folder}}/create_html.py"
+        mode: 0400

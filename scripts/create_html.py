@@ -33,8 +33,8 @@ def Get_Html(server,csv_file,html_file):
     """
 
     now = datetime.now()
-    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-    section_2="Last Backup Date & Time: "+dt_string
+    dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
+    section_2="Last Backup Date & Time: " + dt_string
 
     section_3="""
     </label>
@@ -51,8 +51,8 @@ def Get_Html(server,csv_file,html_file):
         <table  style='font-style: bold; color:black; font-family:serif; font-size: 20px;'>
 
             <tr>
-                <td width="20%"> <a href="index.html">Infra</a></td>
-                <td width="20%"> <a href="DB.html">DB</a>
+                <td width="20%"> <a href="index.html">Main</a></td>
+                <td width="20%"> <a href="Second.html">Second</a>
             </td>
             
     </div>
@@ -97,5 +97,3 @@ def Get_Html(server,csv_file,html_file):
 
 #Get_Html("Database","DB1.csv","DB1.html")
 Get_Html(sys.argv[1],sys.argv[2],sys.argv[3])
-
-

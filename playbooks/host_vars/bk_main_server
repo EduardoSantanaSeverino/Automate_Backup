@@ -1,2 +1,1 @@
-hostfiles: "/root/backup-job1/html"
 cronjob_log_folder: "/root/backup-job1/cronjob-logs"

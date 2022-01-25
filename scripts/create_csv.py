@@ -11,7 +11,7 @@ import csv
 def csv_write (folder_location,status,server,file_name):
 
      now = datetime.now()
-     value=now.strftime("%d-%m-%y %H:%M:%S")
+     value=now.strftime("%Y-%m-%d %H:%M:%S")
 
      data=[[value,folder_location,server,status]]
      csv_file=file_name

@@ -54,3 +54,7 @@
       name:
         - docker
         - docker-compose
+
+  - name: install python
+    apt:
+      name: python

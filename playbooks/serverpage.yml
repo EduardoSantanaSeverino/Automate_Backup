@@ -10,5 +10,5 @@
       ports:
         - "8080:80"
       volumes:
-        - "{{hostfiles}}:/usr/share/nginx/html"
+        - "{{cronjob_log_folder}}/html:/usr/share/nginx/html"
       restart_policy: always
