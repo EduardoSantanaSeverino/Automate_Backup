@@ -18,10 +18,12 @@
           CURRENT_TIME=$(date +"%Y%m%d_%H%M")
           echo "Executed successfully at: $CURRENT_TIME" >> {{cronjob_log_folder}}/log.log
 
-    - name: Creates an schedule
+    - name: Creates an schedule #  crontab -l
       cron:
         name: "BookScriptExecute"
         day: "*/1"
+        hour: "1"
+        minute: "0"
         job: "{{cronjob_log_folder}}/exec.sh"
 
           

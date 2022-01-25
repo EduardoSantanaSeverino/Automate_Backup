@@ -2,30 +2,14 @@
 - name: This playbook is dedicated to install dependencies
   hosts: bk_main_server
   tasks:
-    - name: Install utilities
-      become: true
-      apt:
-        state: present # absent / present
-        update_cache: yes
-        pkg:
-          - docker.io
-          - docker-compose
-          - python
-          - python3-pip
-
-    - name: add userpermissions
-      shell: "usermod -aG docker {{ lookup('env','USER') }}"
-
-    - name: install python sdk
-      become_user: "{{ lookup('env','USER') }}"
-      pip:
-        state: present # absent / present
-        name:
-          - docker
-          - docker-compose
-          
     - name: Executing script to collections
       shell: ansible-galaxy collection install community.docker
 
+    - name: Executing posix
+      shell: ansible-galaxy collection install ansible.posix
+
+
+
+          
 
           
