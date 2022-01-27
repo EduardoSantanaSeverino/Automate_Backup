@@ -2,12 +2,6 @@
      - name: This playbook is dedicated to taking backup to remote server
        block:
 
-        - name: Creating a new folder for backup and server
-          become: true
-          file:
-            path: "{{cronjob_log_folder}}/backups/{{ inventory_hostname }}/{{ item.name }}"
-            state: directory
-
         - name: Creating a file with script to execute
           become: true
           copy:
@@ -20,7 +14,7 @@
               echo "$RESULT_LOG" >> {{cronjob_log_folder}}/{{item.name}}.log
               CURRENT_TIME=$(date +"%Y%m%d_%H%M")
               echo "Execution Completed at: $CURRENT_TIME" >> {{cronjob_log_folder}}/{{item.name}}.log
-              python create_csv.py "{{ item.path }}" "Success" "{{ inventory_hostname }}" "{{ inventory_hostname }}.csv"
+              python create_csv.py "{{ item.path }}" "Success" "{{ server_ip }}" "{{ inventory_hostname }}.csv"
               python create_html.py "{{ inventory_hostname }}" "{{ inventory_hostname }}.csv" "html/{{ inventory_hostname }}.html" "servers.csv"
               FILE="html/index.html"
               REGEX_FILE_CONTENT="\s+SERVER IS READY TO GO!\s+"

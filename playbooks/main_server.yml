@@ -61,6 +61,12 @@
             path: "{{cronjob_log_folder}}/servers.csv"
             line: "{{ inventory_hostname }}"
 
+        - name: Creating a new folder for backup and server
+          become: true
+          file:
+            path: "{{cronjob_log_folder}}/backups/{{ inventory_hostname }}"
+            state: directory
+
         - name: Executing tasks via external yml
           include_tasks: main_server_start_backup.yml
           with_items:

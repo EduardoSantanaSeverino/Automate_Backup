@@ -3,6 +3,12 @@
   
   tasks:
 
+    - name: Creating a new folder for html
+      become: true
+      file:
+        path: "{{cronjob_log_folder}}/html"
+        state: directory
+          
     - name: Creating a file with script to execute  
       become: true
       copy:

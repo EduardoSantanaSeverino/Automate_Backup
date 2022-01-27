@@ -1,6 +1,6 @@
 cronjob_log_folder: "/root/backup-job1/cronjob-logs"
 server_ip: "129.213.22.214"
-server_user: "ubuntu"
+server_user: "root"
 server_port: "22"
 folders: 
    - name: oraclecloud1_dataapi
