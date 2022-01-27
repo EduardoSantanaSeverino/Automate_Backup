@@ -2,15 +2,20 @@
 #Purpose - To create static html web pages from CSV files
 #Developer - Janarthanan
 #Date - 17/10/2019
+#Modified Purpose - To Dinamically add servers
+#Modified Developer - Eduardo Santana
+#Modified Date - 2022-01-27
 
 import csv
 import sys
 from datetime import datetime
 import os
 
-def Get_Html(server,csv_file,html_file):
+def Get_Html(server,csv_file,html_file,servers_file):
     # Open the CSV file for reading
     reader = csv.reader(open(csv_file))
+
+    readerServers = csv.reader(open(servers_file))
 
     directoryArray=html_file.split("/")
     directoryArrayLastElement=directoryArray[len(directoryArray)-1]
@@ -42,35 +47,41 @@ def Get_Html(server,csv_file,html_file):
 
     """
 
-    section_4="Owner : "+server +" Team"
+    section_4="Owner : " + server 
 
-    section_5="""
+    section_5_1="""
     </label>
     </div>
     <div style="height: 45;size: 40;padding-top: 10">
-        <table  style='font-style: bold; color:black; font-family:serif; font-size: 20px;'>
-
+        <table style='font-style: bold; color:black; font-family:serif; font-size: 20px;'>
             <tr>
-                <td width="20%"> <a href="index.html">Main</a></td>
-                <td width="20%"> <a href="Second.html">Second</a>
-            </td>
-            
-    </div>
     """
+
+    section_5_2="</td> </table> </div>"
+
     f_html.write(section_1)
     f_html.write(section_2)
     f_html.write(section_3)
     f_html.write(section_4)
-    f_html.write(section_5)
+    f_html.write(section_5_1)
+
+    for row in readerServers: # Read a single row from the CSV file
+        f_html.write("""<td width="20%"> <a href="{0}.html">{0}</a></td>""".format(row[0]))
+
+    f_html.write(section_5_2)
     f_html.write('<title>BackUP Information</title>')
     f_html.write("""<table border="1" style='font-style: bold; color:black; font-family:courier; font-size: 16px;'>""")
 
     header=0
     cols=['Date and Time','Backup Folder','Server IP','Status']
 
+    f_html.write('<tr>')
+
     for val in cols:
         f_html.write("""<td height="40" width=20% style="background-color: bisque;font-size: 20;color:red;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">""" + val + '</td>')
     
+    f_html.write('</tr>')
+
     for row in reader: # Read a single row from the CSV file
 
         col=0
@@ -92,8 +103,7 @@ def Get_Html(server,csv_file,html_file):
     f_html.write("""</table></body></html>""")
     f_html.close()
 
-
 #Calling CSV for server 201,202 and 203
 
 #Get_Html("Database","DB1.csv","DB1.html")
-Get_Html(sys.argv[1],sys.argv[2],sys.argv[3])
+Get_Html(sys.argv[1],sys.argv[2],sys.argv[3],sys.argv[4])

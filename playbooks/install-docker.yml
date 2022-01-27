@@ -1,5 +1,5 @@
 ---
-- hosts: bk_main_server
+- hosts: backup_server
   
   become: yes
   tasks:
@@ -43,10 +43,6 @@
   - name: install python package manager
     apt:
       name: python3-pip
-  
-  - name: install python setuptools
-    apt:
-      name: python-setuptools
   
   - name: install python sdk
     become_user: "{{ lookup('env','USER') }}"

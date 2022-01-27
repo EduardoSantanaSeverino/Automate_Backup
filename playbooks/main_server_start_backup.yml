@@ -1,0 +1,38 @@
+---
+     - name: This playbook is dedicated to taking backup to remote server
+       block:
+
+        - name: Creating a new folder for backup and server
+          become: true
+          file:
+            path: "{{cronjob_log_folder}}/backups/{{ inventory_hostname }}/{{ item.name }}"
+            state: directory
+
+        - name: Creating a file with script to execute
+          become: true
+          copy:
+            dest: "{{cronjob_log_folder}}/{{item.name}}.sh"
+            mode: 0755
+            content: |
+              CURRENT_TIME=$(date +"%Y%m%d_%H%M")
+              echo "Execution Started at: $CURRENT_TIME" >> {{cronjob_log_folder}}/{{item.name}}.log
+              RESULT_LOG=$(rsync -av -e ssh {{ inventory_hostname }}:{{ item.path }} {{cronjob_log_folder}}/backups/{{ inventory_hostname }})
+              echo "$RESULT_LOG" >> {{cronjob_log_folder}}/{{item.name}}.log
+              CURRENT_TIME=$(date +"%Y%m%d_%H%M")
+              echo "Execution Completed at: $CURRENT_TIME" >> {{cronjob_log_folder}}/{{item.name}}.log
+              python create_csv.py "{{ item.path }}" "Success" "{{ inventory_hostname }}" "{{ inventory_hostname }}.csv"
+              python create_html.py "{{ inventory_hostname }}" "{{ inventory_hostname }}.csv" "html/{{ inventory_hostname }}.html" "servers.csv"
+              FILE=html/index.html
+              if [ -f "$FILE" ]; then
+                  echo "$FILE exists."
+              else 
+                  echo "$FILE does not exist." >> {{cronjob_log_folder}}/{{item.name}}.log
+                  cp html/{{ inventory_hostname }}.html $FILE 
+              fi
+              exit 0
+
+        - name: Creates an schedule #  crontab -l
+          cron:
+            name: "ScriptExecute-{{item.name}}"
+            hour: "*/{{item.hours}}"
+            job: "{{cronjob_log_folder}}/{{item.name}}.sh"

@@ -1,0 +1,66 @@
+---
+- name: This playbook is dedicated to taking backup related to main servers
+  hosts: main_server
+  gather_facts: False
+  tasks:
+
+        - name: Set timezone to America/Toronto
+          community.general.timezone:
+            name: America/Toronto
+
+        - name: Creating a new folder for keys
+          become: true
+          file:
+            path: "/root/.ssh/keys"
+            state: directory
+
+        - name: Creating a new folder for log_folder
+          become: true
+          file:
+            path: "{{cronjob_log_folder}}"
+            state: directory
+
+        - name: Copy File Create CSV
+          become: true 
+          copy:
+            src: ../scripts/create_csv.py
+            dest: "{{cronjob_log_folder}}/create_csv.py"
+            mode: 0400
+
+        - name: Copy File Create HTML
+          become: true 
+          copy:
+            src: ../scripts/create_html.py
+            dest: "{{cronjob_log_folder}}/create_html.py"
+            mode: 0400
+
+        - name: Add SSH Config in file 
+          become: true
+          blockinfile:
+            path: /root/.ssh/config
+            create: true
+            marker_begin: "BEGIN {{ inventory_hostname }} ANSIBLE MANAGED BLOCK"
+            marker_end : "END {{ inventory_hostname }} ANSIBLE MANAGED BLOCK"
+            block: |
+              Host {{ inventory_hostname }}
+                HostName {{ server_ip }}
+                User {{ server_user }}
+                Port {{ server_port }}
+                IdentityFile /root/.ssh/keys/{{ inventory_hostname }}
+
+        - name: Copy SSH Private key
+          become: true 
+          copy:
+            src: ../inventory/{{ inventory_hostname }}.key
+            dest: /root/.ssh/keys/{{ inventory_hostname }}
+            mode: 0400
+
+        - name: Ensure Host File is in server file
+          lineinfile:
+            path: "{{cronjob_log_folder}}/servers.csv"
+            line: "{{ inventory_hostname }}"
+
+        - name: Executing tasks via external yml
+          include_tasks: main_server_start_backup.yml
+          with_items:
+            - "{{ folders }}" #Obtained from the group_vars

@@ -1,0 +1,9 @@
+cronjob_log_folder: "/root/backup-job1/cronjob-logs"
+server_ip: "93.190.93.21"
+server_user: "root"
+server_port: "33091"
+folders: 
+   - name: pentahost24_newbackup
+     path: /newbackup
+     hours: 6
+   
