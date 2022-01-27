@@ -6,20 +6,20 @@
     - name: Creating a file with script to execute  
       become: true
       copy:
-        dest: "{{cronjob_log_folder}}/html"
+        dest: "{{cronjob_log_folder}}/html/index.html"
         content: |
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Sample</title>
-        </head>
-        <body>
-            SERVER IS READY TO GO!
-        </body>
-        </html>
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta http-equiv="X-UA-Compatible" content="IE=edge">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Sample</title>
+          </head>
+          <body>
+              SERVER IS READY TO GO!
+          </body>
+          </html>
 
     - name: Deploy Server Page
       community.docker.docker_container:

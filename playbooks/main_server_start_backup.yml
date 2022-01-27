@@ -22,12 +22,21 @@
               echo "Execution Completed at: $CURRENT_TIME" >> {{cronjob_log_folder}}/{{item.name}}.log
               python create_csv.py "{{ item.path }}" "Success" "{{ inventory_hostname }}" "{{ inventory_hostname }}.csv"
               python create_html.py "{{ inventory_hostname }}" "{{ inventory_hostname }}.csv" "html/{{ inventory_hostname }}.html" "servers.csv"
-              FILE=html/index.html
+              FILE="html/index.html"
+              REGEX_FILE_CONTENT="\s+SERVER IS READY TO GO!\s+"
               if [ -f "$FILE" ]; then
-                  echo "$FILE exists."
+                  FILE_CONTENT=$( cat "${FILE}" )
+                  if [[ " $FILE_CONTENT " =~ $REGEX_FILE_CONTENT ]] # please note the space before and after the file content
+                  then
+                      rm $FILE
+                      CURRENT_TIME=$(date +"%Y%m%d_%H%M")
+                      echo "$CURRENT_TIME $FILE exists. Deleting and updating. " >> {{cronjob_log_folder}}/{{item.name}}.log
+                      cp html/{{ inventory_hostname }}.html $FILE
+                  fi
               else 
-                  echo "$FILE does not exist." >> {{cronjob_log_folder}}/{{item.name}}.log
-                  cp html/{{ inventory_hostname }}.html $FILE 
+                  CURRENT_TIME=$(date +"%Y%m%d_%H%M")
+                  echo "$CURRENT_TIME $FILE does not exist. Creating new file." >> {{cronjob_log_folder}}/{{item.name}}.log
+                  cp html/{{ inventory_hostname }}.html $FILE
               fi
               exit 0
 

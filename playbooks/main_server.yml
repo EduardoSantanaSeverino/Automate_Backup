@@ -57,6 +57,7 @@
 
         - name: Ensure Host File is in server file
           lineinfile:
+            create: true
             path: "{{cronjob_log_folder}}/servers.csv"
             line: "{{ inventory_hostname }}"
 
