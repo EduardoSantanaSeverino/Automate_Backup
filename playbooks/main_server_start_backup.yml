@@ -17,11 +17,9 @@
               python create_csv.py "{{ item.path }}" "Success" "{{ server_ip }}" "{{ inventory_hostname }}.csv"
               python create_html.py "{{ inventory_hostname }}" "{{ inventory_hostname }}.csv" "html/{{ inventory_hostname }}.html" "servers.csv"
               FILE="html/index.html"
-              REGEX_FILE_CONTENT="\s+SERVER IS READY TO GO!\s+"
+              FILE_CONTENT="SERVER IS READY TO GO!"
               if [ -f "$FILE" ]; then
-                  FILE_CONTENT=$( cat "${FILE}" )
-                  if [[ " $FILE_CONTENT " =~ $REGEX_FILE_CONTENT ]] # please note the space before and after the file content
-                  then
+                  if grep -q "$FILE_CONTENT" "$FILE"; then
                       rm $FILE
                       CURRENT_TIME=$(date +"%Y%m%d_%H%M")
                       echo "$CURRENT_TIME $FILE exists. Deleting and updating. " >> {{cronjob_log_folder}}/{{item.name}}.log
@@ -38,4 +36,5 @@
           cron:
             name: "ScriptExecute-{{item.name}}"
             hour: "*/{{item.hours}}"
+            minute: 0
             job: "{{cronjob_log_folder}}/{{item.name}}.sh"

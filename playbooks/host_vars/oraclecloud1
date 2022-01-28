@@ -3,10 +3,12 @@ server_ip: "129.213.22.214"
 server_user: "root"
 server_port: "22"
 folders: 
-   - name: oraclecloud1_dataapi
-     path: /home/ubuntu/dataapi
-     hours: 12
-   - name: oraclecloud1_proxy
-     path: /home/ubuntu/get-composev3/proxy
-     hours: 18
-   
+  - name: oraclecloud1_dataapi
+    path: /home/ubuntu/dataapi
+    hours: 12
+  - name: oraclecloud1_proxy
+    path: /home/ubuntu/get-composev3/proxy
+    hours: 18
+  - name: oraclecloud1_docker
+    path: /etc/docker
+    hours: 20
