@@ -14,9 +14,9 @@
               echo "$RESULT_LOG" >> {{cronjob_log_folder}}/{{item.name}}.log
               CURRENT_TIME=$(date +"%Y%m%d_%H%M")
               echo "Execution Completed at: $CURRENT_TIME" >> {{cronjob_log_folder}}/{{item.name}}.log
-              python create_csv.py "{{ item.path }}" "Success" "{{ server_ip }}" "{{ inventory_hostname }}.csv"
-              python create_html.py "{{ inventory_hostname }}" "{{ inventory_hostname }}.csv" "html/{{ inventory_hostname }}.html" "servers.csv"
-              FILE="html/index.html"
+              /usr/bin/python {{cronjob_log_folder}}/create_csv.py "{{ item.path }}" "Success" "{{ server_ip }}" "{{cronjob_log_folder}}/{{ inventory_hostname }}.csv"
+              /usr/bin/python {{cronjob_log_folder}}/create_html.py "{{ inventory_hostname }}" "{{cronjob_log_folder}}/{{ inventory_hostname }}.csv" "{{cronjob_log_folder}}/html/{{ inventory_hostname }}.html" "{{cronjob_log_folder}}/servers.csv"
+              FILE="{{cronjob_log_folder}}/html/index.html"
               FILE_CONTENT="SERVER IS READY TO GO!"
               if [ -f "$FILE" ]; then
                   if grep -q "$FILE_CONTENT" "$FILE"; then
@@ -30,7 +30,7 @@
                   echo "$CURRENT_TIME $FILE does not exist. Creating new file." >> {{cronjob_log_folder}}/{{item.name}}.log
                   cp html/{{ inventory_hostname }}.html $FILE
               fi
-              exit 0
+              exit
 
         - name: Creates an schedule #  crontab -l
           cron:

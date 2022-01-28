@@ -91,12 +91,12 @@ def Get_Html(server,csv_file,html_file,servers_file):
             #print ("Headers : "+column )
             #f_html.write("""<td height="40" style="background-color: bisque;font-size: 20;color:red;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">""" + column + '</td>')
             
-            print("column : "+column )
+            #print("column : "+column )
             f_html.write("""<td height="25" style="background-color: bisque;font-size: 17;font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">""" + column + '</td>')
 
             col+=1
 
-        print("\n....")
+        #print("\n....")
         f_html.write('</tr>')
         header+=1
 

@@ -25,14 +25,14 @@
           copy:
             src: ../scripts/create_csv.py
             dest: "{{cronjob_log_folder}}/create_csv.py"
-            mode: 0400
+            mode: 0511
 
         - name: Copy File Create HTML
           become: true 
           copy:
             src: ../scripts/create_html.py
             dest: "{{cronjob_log_folder}}/create_html.py"
-            mode: 0400
+            mode: 0511
 
         - name: Add SSH Config in file 
           become: true
